@@ -1,0 +1,64 @@
+## Airflow Helm values.yaml for local Docker Desktop Kubernetes
+
+executors:
+  airflowExecutor: "LocalExecutor"
+
+postgresql:
+  enabled: false
+externalDatabase:
+  type: "postgresql"
+  host: "postgres.data-platform.svc.cluster.local"
+  port: 5432
+  database: "spacexdb"
+  user: "admin"
+  password: "postgres_pass"   # For prototype; consider referencing a Secret in production
+
+image:
+  repository: apache/airflow
+  tag: "2.5.1"  # or latest stable
+  pullPolicy: IfNotPresent
+
+metrics:
+  enabled: true
+  statsd:
+    enabled: true
+    host: "statsd-exporter.monitoring.svc.cluster.local"
+    port: 9125
+  prometheus:
+    airflow:
+      enabled: true
+
+extraEnv:
+  - name: AIRFLOW__METRICS__STATSD_ON
+    value: "True"
+  - name: AIRFLOW__METRICS__STATSD_HOST
+    value: "statsd-exporter.monitoring.svc.cluster.local"
+  - name: AIRFLOW__METRICS__STATSD_PORT
+    value: "9125"
+
+# DAG deployment via ConfigMap or Git-Sync
+dags:
+  gitSync:
+    enabled: false
+
+# Resource requests for local environment
+web:
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+scheduler:
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+workers:
+  resources:
+    requests:
+      cpu: 500m
+      memory: 512Mi
+
+# Logs: ephemeral for prototype
+logs:
+  persistence:
+    enabled: false

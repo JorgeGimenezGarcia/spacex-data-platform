@@ -1,0 +1,22 @@
+apiVersion: monitoring.com/v1
+kind: ServiceMonitor
+metadata:
+  name: statsd-exporter
+  namespace: monitoring
+  labels:
+    release: kube-prom-stack
+spec:
+  selector:
+    matchLabels:
+      app: statsd-exporter
+  namespaceSelector:
+    matchNames:
+      - monitoring
+  endpoints:
+    - port: udp
+      interval: 15s
+      metricRelabelings:
+        # If mapping needed; by default statsd-exporter exports metrics on /metrics via HTTP
+        # Some exporters expose metrics via HTTP; if so, adjust port/protocol accordingly.
+        # prom/statsd-exporter default: listens UDP port 9125 and exposes HTTP on port 9102; adjust if needed.
+    # Note: If statsd-exporter exposes metrics on HTTP, ensure Service and ServiceMonitor ports align.
