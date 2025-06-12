@@ -1,0 +1,17 @@
+apiVersion: monitoring.com/v1
+kind: ServiceMonitor
+metadata:
+  name: postgres-exporter
+  namespace: monitoring
+  labels:
+    release: kube-prom-stack
+spec:
+  selector:
+    matchLabels:
+      app: postgres-exporter
+  namespaceSelector:
+    matchNames:
+      - data-platform
+  endpoints:
+    - port: 9187
+      interval: 15s

@@ -1,0 +1,20 @@
+core_usage_dag.py Python
+__pycache__/
+*.py[cod]
+*.env
+venv/
+.env
+# Docker
+*.log
+docker-compose.override.yml
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+# Airflow
+airflow.cfg
+airflow.db
+logs/
+# IDEs
+.vscode/
+.idea/
